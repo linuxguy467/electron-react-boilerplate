@@ -1,7 +1,7 @@
 {
   "name": "electron-react-boilerplate",
   "version": "0.1.0",
-  "main": "build/electron.js",
+  "main": "main.js",
   "homepage": "./",
   "private": true,
   "dependencies": {
@@ -58,7 +58,7 @@
     "forge": {
       "packagerConfig": {
         "dir": "build",
-        "icon": "src/icons/mac/icon.icns",
+        "icon": "icons/mac/icon.icns",
         "name": "React + Electron App",
         "ignore": [
           ".gitignore"

@@ -3,12 +3,18 @@ const isDev = require('electron-is-dev')
 const path = require('path')
 
 // Conditionally include the dev tools installer to load React Dev Tools
-let installExtension, REACT_DEVELOPER_TOOLS
+const initializeDevEnviroment = (win) => {
+  if (isDev) {
+    const devTools = require('electron-devtools-installer')
+    const installExtension = devTools.default
+    const REACT_DEVELOPER_TOOLS = devTools.REACT_DEVELOPER_TOOLS
 
-if (isDev) {
-  const devTools = require('electron-devtools-installer')
-  installExtension = devTools.default
-  REACT_DEVELOPER_TOOLS = devTools.REACT_DEVELOPER_TOOLS
+    installExtension(REACT_DEVELOPER_TOOLS)
+      .then((name) => console.log(`Added Extension: ${name}`))
+      .catch((error) => console.error(`An error occurred: , ${error}`))
+
+    win.webContents.openDevTools()
+  }
 }
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling
@@ -16,7 +22,7 @@ if (require('electron-squirrel-startup')) {
   app.quit()
 }
 
-function createWindow() {
+const createWindow = () => {
   // Create the browser window.
   const win = new BrowserWindow({
     width: 1200,
@@ -31,17 +37,11 @@ function createWindow() {
   win.loadURL(
     isDev
       ? 'http://localhost:3000'
-      : `file://${path.join(__dirname, '../build/index.html')}`
+      : `file://${path.join(__dirname, './build/index.html')}`
   )
 
   // Open the DevTools.
-  if (isDev) {
-    installExtension(REACT_DEVELOPER_TOOLS)
-      .then((name) => console.log(`Added Extension: ${name}`))
-      .catch((error) => console.error(`An error occurred: , ${error}`))
-
-    win.webContents.openDevTools()
-  }
+  initializeDevEnviroment(win)
 }
 
 // This method will be called when Electron has finished
